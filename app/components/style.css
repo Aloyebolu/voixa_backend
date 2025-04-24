@@ -1,0 +1,178 @@
+.a{
+    border-right: 2px solid white;
+    padding-right: 10px;
+}
+.active{
+    color: greenyellow;
+    font-weight: bold;
+    border-right: 2px solid greenyellow;
+}
+.profile{
+    object-fit: cover;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 3px solid rgb(102, 245, 13);
+}.name{
+    font-size: 14px ;
+    padding: 2px;
+    color: greenyellow;
+}.round{
+    border-radius: 50%;
+    padding: 5px;;
+    border-top: 7px solid greenyellow;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+}
+.add-input{
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgb(17, 17, 17);
+    border: 2px solid greenyellow;
+    outline: none;
+    color: greenyellow;
+}
+.add-button{
+    padding: 7px;
+    background-color: rgb(17, 17, 17);
+    border: 2px solid greenyellow;
+    margin-top: 4px;
+    border-radius: 15px;
+    color: greenyellow
+    
+}
+.user-message{
+    color: rgb(255, 255, 255);
+    width: fit-content;
+    padding: 7px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    position: relative;
+    background-color: green;
+    .modal{
+        right: 100%;
+        
+    }
+}
+.m2{
+    display: flex;
+    justify-content: end;
+    position: relative;
+
+}
+.message{
+    width: 100%;
+    position: relative;
+    margin-top: 2px;
+
+    /* height: 40px */
+}
+.sender-message{
+    color: rgb(255, 255, 255);
+    width: fit-content;
+    padding: 7px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    left: 8px;
+    background-color: rgb(27, 27, 27);
+
+}
+.reply-a{
+    color: rgb(172, 172, 172);
+    background-color: rgba(0, 0, 0, 0.324);
+    padding: 3px;
+    border-radius: 7px;
+    overflow: hidden;
+    background-clip: padding-box;
+    box-shadow: -3px 0 0 rgb(204, 20, 255);
+}.reply-b{
+    color: rgb(172, 172, 172);
+    background-color: rgba(0, 0, 0, 0.324);
+    padding: 3px;
+    border-radius: 7px;
+    overflow: hidden;
+    background-clip: padding-box;
+    box-shadow: -3px 0 0 green;
+}
+.triangle{
+    width: 0;
+    height: 0;
+    border-top: 0px solid transparent;
+    border-bottom: 10px solid transparent;
+} 
+.triangle-a{
+    width: 0;
+    height: 0;
+    border-top: 0px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid rgb(27, 27, 27);
+}.triangle-b{
+    width: 0;
+    height: 0;
+    border-top: 0px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid green;
+}.modal{
+    background-image: linear-gradient(rgba(0, 255, 8, 0.165), rgba(207, 255, 208, 0.165)) ;
+    backdrop-filter: blur(50);
+    width: fit-content;
+    position: absolute;
+    top: 100%;
+    z-index: 30;
+}.modal>div>button{
+    padding: 10px 30px;
+    transition: 0.2s;
+    left: 0px;
+
+}.modal>div>button:hover{
+    transform: scale(1.2);
+}.like{
+    position: absolute;
+    bottom: -10;
+    background-color: rgba(255, 255, 255, 0.319);
+    border-radius: 50%;
+    font-size: 13px;
+    right: 4;
+    color: red
+}
+.down{
+    width: 100%;
+   position: fixed;
+   bottom: 5;
+
+   padding: 3px;
+}
+.reply-ind{
+    color: rgb(172, 172, 172);
+    background-color: rgba(0, 0, 0, 0.324);
+    padding: 3px;
+    border-radius: 7px;
+    overflow: hidden;
+    background-clip: padding-box;
+    box-shadow: -4px 0 0 green;
+    width: 100%;
+    background-color: white;
+} .down>div{
+width: 100%;
+display: flex;
+justify-content: space-between;
+
+color: white;
+padding: 10 10 10 10;
+height: fit-content;
+}
+    .input{
+    width: 88%;
+    border-radius: 10px;
+    background-color: black;
+    border-radius: 20px;
+    padding: 10px;
+    input{
+        outline: none;
+        padding: 10px;
+        
+    }
+}
