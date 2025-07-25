@@ -74,17 +74,21 @@
 // export { client as redisClient };
 
 import { createClient } from 'redis';
-// import type { RedisClientType } from 'redis';
 
-// 🔹 Option A – widest, simplest
-// type MyRedisClient = RedisClientType<any, any, any>;
-
-// 🔹 Option B – safest, let TS figure it out
 type MyRedisClient = ReturnType<typeof createClient>;
 
 const client = createClient({
-  url: 'redis://localhost:6379',
+  username: 'default',
+  password: 'ekv3e4onpJSaw6CjOXmUGMz507mSpfqD',
+  socket: {
+    host: 'redis-14171.crce197.us-east-2-1.ec2.redns.redis-cloud.com',
+    port: 14171,
+    // tls: true, // remove this and try again
+  },
 });
+
+
+client.on('error', err => console.error('Redis Client Error', err));
 
 let isConnected = false;
 let connectionPromise: Promise<void> | null = null;
@@ -105,6 +109,7 @@ export async function getRedisClient(): Promise<MyRedisClient> {
   } else if (connectionPromise) {
     await connectionPromise;
   }
+  console.log("Done")
   return client;
 }
 
