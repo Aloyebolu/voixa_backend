@@ -13,6 +13,7 @@
     "dev:worker": "node --loader ts-node/esm /app/lib/worker.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.52.1",
     "@types/nodemailer": "^6.4.17",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
