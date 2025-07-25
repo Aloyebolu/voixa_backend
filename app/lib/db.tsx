@@ -8,8 +8,8 @@ export const connectDB = async () => {
     try {
         if (!client) {
             client = new Client({
-              user: process.env.POSTGRES_USER || 'postgres',  
-              host: 'db.vfwvvednpjtigysckvhq.supabase.co',      
+              user: process.env.POSTGRES_USER || 'postgres.vfwvvednpjtigysckvhq',  
+              host: 'aws-0-us-east-1.pooler.supabase.com',      
               database: process.env.POSTGRES_DB || 'postgres',  
               password: process.env.POSTGRES_PASSWORD || 'Aloyebolu.123',  
               port: Number(process.env.POSTGRES_PORT) || 5432,
