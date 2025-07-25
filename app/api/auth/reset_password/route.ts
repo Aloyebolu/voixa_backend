@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { generateSalt, hashPassword } from '@/app/lib/auth/password-util';
 import { query, connectDB } from '@/app/lib/db';
 import { sendEmail } from '@/app/lib/email/email.service';

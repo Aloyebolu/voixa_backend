@@ -1,6 +1,6 @@
 import { createPermit } from "@/app/lib/permits/createPermit";
 import { verifyPermit } from "@/app/lib/permits/verifyPermit";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 /**
  * Generates a permit token.

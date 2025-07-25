@@ -5,7 +5,6 @@ import { getEmailTemplate } from './templates';
 // For development, use Ethereal.email test account
 const createTransporter = async () => {
   // Generate test SMTP service account from ethereal.email
-  const testAccount = await nodemailer.createTestAccount();
 
   return nodemailer.createTransport({
     host: 'smtp.ethereal.email',

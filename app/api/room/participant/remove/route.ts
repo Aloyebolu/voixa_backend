@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     const statusResult = await query(updateStatusQuery, [userId, roomId]);
 
     // Check if any rows were affected
-    if (positionResult.rowCount === 0 && statusResult.rowCount === 0) {
+    if (positionResult.length === 0 && statusResult.length === 0) {
       return setCorsHeaders(
         NextResponse.json(
           { message: "No matching record found to update" },

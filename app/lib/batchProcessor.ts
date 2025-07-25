@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // YOUR IMPORTS REMAIN UNCHANGED
 import { getRedisClient } from "./redis/redis";
 import { connectDB, query } from "./db";

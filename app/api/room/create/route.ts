@@ -14,6 +14,7 @@ function setCorsHeaders(response: NextResponse) {
 export async function POST(request: NextRequest) {
 
   connectDB();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { description, tag, max_participants, scheldueled_room, type} = await request.json();
   const hostId = getUserIdFromRequest(request).userId;
   if (!hostId) {

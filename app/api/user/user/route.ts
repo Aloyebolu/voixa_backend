@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB, query } from "@/app/lib/db";
 import { getUserIdFromRequest, setCorsHeaders } from "@/app/lib/utils";
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
 
   // Remove it from actual field list since it's not in the users table
   const dbFields = safeFields.filter((f: string) => f !== "image_path");
-  const fieldString = dbFields.map((f) => `"${f}"`).join(", ");
+  const fieldString = dbFields.map((f: any) => `"${f}"`).join(", ");
   console.log(fieldString);
 
   try {

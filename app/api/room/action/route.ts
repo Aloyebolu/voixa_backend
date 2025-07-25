@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB, query } from "@/app/lib/db";
 import { getUserIdFromRequest, setCorsHeaders } from "@/app/lib/utils";
@@ -5,7 +6,6 @@ import { ERROR_CODES } from "@/app/utils/errorCodes";
 import { verifyPermit } from "@/app/lib/permits/verifyPermit";
 import { BatchProcessor } from "@/app/lib/batchProcessor";
 import { getRedisClient } from "@/app/lib/redis/redis";
-import { json } from "stream/consumers";
 import { getUserRoleFromDatabase } from "../../../lib/functions";
 
 
@@ -19,6 +19,7 @@ interface UserRoleData {
   id: string;
   role?: string;
   status?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
@@ -168,7 +169,10 @@ export async function POST(request: NextRequest) {
               )
             );
           }
-          const cachedSignerRole = await redis.hGet(rolesKey, data?.by)
+          if (!data?.by) {
+            throw new Error("Signer ID is missing in permit token");
+          }
+          const cachedSignerRole = await redis.hGet(rolesKey, data.by)
           let signerRole: UserRoleData | null = null;
           if (cachedSignerRole) {
             signerRole = JSON.parse(cachedSignerRole)
@@ -179,6 +183,7 @@ export async function POST(request: NextRequest) {
               throw "Signer role could not be found from db"
             }
             signerRole = dbSignerRole && dbSignerRole[0]
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             dbSignerRole && await redis.hSet(rolesKey, data?.by, JSON.stringify(dbSignerRole[0]))
           }
           checkPermission('host')

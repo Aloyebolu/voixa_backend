@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     connectDB();
 
-    const { fields, userId } = await request.json();
+    const {  userId } = await request.json();
     if (!userId) {
       return setCorsHeaders(
         NextResponse.json({ message: "User ID is required" }, { status: 400 })

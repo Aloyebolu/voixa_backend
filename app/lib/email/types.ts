@@ -4,6 +4,7 @@ export interface EmailOptions {
   to: string;
   subject: string;
   template: EmailTemplate;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>;
 }
 

@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
             ? await redis.lRange(redisKey, redisStart, redisEnd)
             : [];
 
-        const redisMessages = redisMessagesRaw.map(JSON.parse);
+        const redisMessages = redisMessagesRaw.map((msg) => JSON.parse(msg));
         const redisCount = redisMessages.length;
 
         // DB Fetch if needed
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
             WHERE cp.conversation_id = $1
         `, [conversationId]);
 
-        const participants = {};
+        const participants : { [key: string]: { id: string; name: string; imagePath: string | null; } } = {};
         participantsResult.forEach(user => {
             participants[user.id] = {
                 id: user.id,

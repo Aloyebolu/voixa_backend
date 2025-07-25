@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB, query } from "@/app/lib/db";
-import jwt from 'jsonwebtoken';
-
-const SECRET_KEY = 'your_secret_key'; // Replace with the same key used in login
 
 // Utility function to set CORS headers
 function setCorsHeaders(response: NextResponse) {
@@ -10,24 +7,6 @@ function setCorsHeaders(response: NextResponse) {
   response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
   return response;
-}
-
-// Middleware to verify JWT
-async function verifyToken(request: NextRequest) {
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    console.log(request.headers)
-    return { valid: false, response: setCorsHeaders(NextResponse.json({ message: 'Unauthorized' }, { status: 401 })) };
-  }
-
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    return { valid: true, decoded };
-  } catch (error) {
-    console.log(error)
-    return { valid: false, response: setCorsHeaders(NextResponse.json({ message: 'Invalid token' }, { status: 401 })) };
-  }
 }
 
 // Handle POST

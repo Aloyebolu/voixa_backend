@@ -25,6 +25,7 @@ export const connectDB = async () => {
     }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const query = async (query: string, values: any[] = []) => {
     if (!client) {
         throw new Error('Database client is not connected. Call connectDB() first.');

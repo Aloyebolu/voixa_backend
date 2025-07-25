@@ -4,11 +4,13 @@ interface UserRoleData {
   id: string;
   role?: string;
   status?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 const rolesKey = (roomId : string) => `room:${roomId}:role`
-let redis;
-redis = await getRedisClient()
+// let redis;
+// export async function getUserRoleFromDatabase and getUserRoleFromRedis updated to initialize redis inside the function
+
 export async function getUserRoleFromDatabase(roomId: string, userId: string): Promise<UserRoleData | null> {
 
   const queryText = `
@@ -27,8 +29,11 @@ export async function getUserRoleFromDatabase(roomId: string, userId: string): P
 }
 
 export async function getUserRoleFromRedis(roomId: string, userId: string): Promise<UserRoleData | null> {
-  const result = redis.hGet(rolesKey(roomId), userId)
-
-  return result ? JSON.parse(result) : null;
+  const redis = await getRedisClient();
+  if (redis) {
+    const result = await redis.hGet(rolesKey(roomId), userId);
+    return result ? JSON.parse(result) : null;
+  }
+  return null;
 }
 

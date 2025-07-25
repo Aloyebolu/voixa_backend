@@ -1,21 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // File: app/api/rooms/join/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB, query } from "@/app/lib/db";
 import { getRedisClient } from "@/app/lib/redis/redis";
 import { getUserIdFromRequest } from "@/app/lib/utils";
 import { ERROR_CODES } from "@/app/utils/errorCodes";
-import { batchProcessor } from "@/app/lib/batchProcessor";
+import { BatchProcessor } from "@/app/lib/batchProcessor";
+// import { BatchProcessor } from "@/app/lib/batchProcessor";
 
 // Constants
 const REDIS_ROOM_PREFIX = 'room';
 const REDIS_ROLES_PREFIX = 'roles';
-const rand = 10000010
-const DEFAULT_USER_ID = String(rand); // TODO: Remove after testing
 
 // Types
 interface RoomData {
-  id: string;
-  [key: string]: any;
+  id?: string;
+  [key: string]: any | null
 }
 
 interface UserRoleData {
@@ -60,16 +60,13 @@ async function getRoomFromDatabase(roomId: string): Promise<RoomData | null> {
       AND ui.is_active = true
     WHERE r.id = $1
   `;
-  const hosts = await query(`
-    SELECT 
-    `)
     const result = await query(queryText, [roomId])
     
   return result.length > 0 ? result[0] : null;
 
   
 }
-async function getSpeakersRolesFromDatabase(roomId: string): Promise<[UserRoleData] | null> {
+async function getSpeakersRolesFromDatabase(roomId: string): Promise<UserRoleData[] | null> {
   const queryText = `
     SELECT 
       u.id, u.name, u.country, 
@@ -81,7 +78,7 @@ async function getSpeakersRolesFromDatabase(roomId: string): Promise<[UserRoleDa
     WHERE rr.room_id = $1 AND rr.position > 0
   `;
 
-  const result = await query(queryText, [roomId]);
+  const result: UserRoleData[] = await query(queryText, [roomId]);
   return result.length > 0 ? result : null;
 }
 async function getUserRoleFromDatabase(roomId: string, userId: string): Promise<UserRoleData | null> {
@@ -125,7 +122,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Initialize connections
     await connectDB();
     redis = await getRedisClient();
-    const bp = await batchProcessor
+    const bp = await BatchProcessor.getInstance();
 
     // Authentication
     const { userId } = getUserIdFromRequest(request);
@@ -170,9 +167,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       await redis.hSet(roomKey, stringifiedRoom);
       console.log('🛢️Room fetched from DB', { roomId });
 
+      if(!speakers) {
+        //  console.warn('No speakers found for room', { roomId });
+        return setCorsHeaders(
+          NextResponse.json({ error: "No speakers found for room" }, { status: 404 })
+        );
+      }
       // Cache speakers in Redis
-      for(let i in speakers){
-        await redis.hSet(rolesKey, speakers[i].id, JSON.stringify(speakers[i]))
+      for (const speaker of speakers) {
+        await redis.hSet(rolesKey, speaker.id, JSON.stringify(speaker));
       }
     }
 
@@ -289,7 +292,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // 6. Prepare response data
     const participants = await redis.hGetAll(rolesKey);
     const activeParticipants = Object.entries(participants)
-      .map(([_, data]) => JSON.parse(data))
+      .map(([, data]) => JSON.parse(data))
       .filter(participant => 
         ['holder', 'host'].includes(participant.role || '') || 
         participant.id === userId

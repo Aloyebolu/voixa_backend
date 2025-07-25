@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { query, connectDB } from '@/app/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { verifyPassword } from '@/app/lib/auth/password-util';
 
-const SECRET_KEY = process.env.JWT_SECRET_KEY; // Replace with a secure key
+const SECRET_KEY = process.env.JWT_SECRET_KEY || "Aloyebolu.123"; // Replace with a secure key
 
 // Utility function to set CORS headers
 const createResponse = (messagesObject: object, status: number = 200) => {

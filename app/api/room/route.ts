@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB, query } from "@/app/lib/db";
 import { getUserIdFromRequest } from "@/app/lib/utils";
@@ -51,8 +52,8 @@ export async function POST(request: NextRequest) {
     console.log(rooms)
     // For each room, fetch the participants
     const roomList = await Promise.all(
-      rooms.map(async (room : {participants : [], id: string}) => {
-        const participants = await query(`
+      rooms.map(async (room: { participants: any[]; id: string }) => {
+        const participants: any[] = await query(`
           SELECT 
             u.id, 
             u.country,
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
         `, [room.id]);
         
 
-        room.participants = participants;
+        room.participants = participants ;
         return room;
       })
     );

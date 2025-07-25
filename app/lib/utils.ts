@@ -1,8 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-
-const SECRET_KEY = process.env.JWT_SECRET_KEY // Replace with a strong, secure key
-
 export function setCorsHeaders(response: NextResponse) {
   response.headers.set("Access-Control-Allow-Origin", "*");
   response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -23,9 +19,8 @@ export function setCorsHeaders(response: NextResponse) {
 // }
 
 import { decodeToken } from '../utils/auth';
-import { Interface } from "readline";
 
-export function getUserIdFromRequest(request: NextRequest): { role: string | null; userId: string | null; response?: NextResponse } {
+export function getUserIdFromRequest(request: NextRequest): { role?: string | null; userId: string | null; response?: NextResponse } {
   const authHeader = request.headers.get("Authorization");
   const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
 
@@ -45,7 +40,7 @@ export function getUserIdFromRequest(request: NextRequest): { role: string | nul
   }
 
   const overrideUserId = request.headers.get("x-user-override");
-  const serverOverride = request.headers.get("x-server-override");
+  // const serverOverride = request.headers.get("x-server-override");
   const effectiveUserId = overrideUserId ? (decoded.role === "admin" ? overrideUserId : 'server') : decoded.userId;
 
   if (overrideUserId && decoded.role === "admin") {

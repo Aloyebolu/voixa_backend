@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // services/roomService.ts
 import { query } from "../db";
 import { verifyPermit } from "../permits/verifyPermit";
@@ -5,7 +6,6 @@ import { BatchProcessor } from "../batchProcessor";
 import { getRedisClient } from "../redis/redis";
 import { ERROR_CODES } from "../../utils/errorCodes";
 import { getUserRoleFromDB } from "./joinRoom";
-import { getUserIdFromSocket } from "../../utils/auth";
 import { decodeToken } from "../../utils/auth";
 import { RoomActionType, RoomType, UserRoleData } from "@/types";
 
@@ -85,8 +85,8 @@ export async function handleRoomAction(token: string, roomId: string, action: Ro
       if (!permitResult || typeof permitResult !== "object" || !("by" in permitResult)) {
         throw new Error("Invalid permit token");
       }
-      const { by } = permitResult as { by: string };
-      const signerRole = await getRole(by);
+      // const { by } = permitResult as { by: string };
+      // const signerRole = await getRole(by);
 
       requireRole("host");
 

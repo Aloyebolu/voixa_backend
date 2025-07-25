@@ -2,7 +2,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserIdFromRequest } from "@/app/lib/utils";
 import { joinRoom } from "@/app/lib/rooms/joinRoom";
-import { connectDB } from "@/app/lib/db";
 
 
 

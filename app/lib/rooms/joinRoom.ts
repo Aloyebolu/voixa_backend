@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { getRedisClient } from "../redis/redis";
 // import { BatchProcessor } from "../batchProcessor";
 // import { ERROR_CODES } from "../../utils/errorCodes";
@@ -191,7 +192,6 @@
 // }
 import { getRedisClient } from "../redis/redis";
 import { BatchProcessor } from "../batchProcessor";
-import { ERROR_CODES } from "../../utils/errorCodes";
 import { connectDB, query } from "../db";
 import { RoomData, UserRoleData } from "../../../types";
 import { getUserBadges, getTopBadges } from "../badges/badgeService";

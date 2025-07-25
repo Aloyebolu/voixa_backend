@@ -18,6 +18,7 @@ export async function sendMessage({
     extra,
 }: {
     userId: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     extra: any;
 }) {
     const redis = await getRedisClient();

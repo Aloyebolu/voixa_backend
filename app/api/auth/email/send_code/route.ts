@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { query, connectDB } from '@/app/lib/db';
 import { sendEmail } from '@/app/lib/email/email.service';
 import { getRedisClient } from '@/app/lib/redis/redis';
@@ -25,6 +26,7 @@ export async function OPTIONS() {
 export async function POST(request: NextRequest) {
   try {
     const { email, type } = await request.json();
+    if(type){}
     const data = { verificationCode: Math.floor(100000 + Math.random() * 900000) };
     console.log(data.verificationCode, email);
     // const emailSent = await sendEmail({

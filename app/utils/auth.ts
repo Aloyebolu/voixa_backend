@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // utils/auth.ts
 import jwt from 'jsonwebtoken';
 import { Socket } from 'socket.io';
@@ -10,10 +11,7 @@ interface DecodedToken {
 }
 
 // Interface for the return type of getUserIdFromSocket
-interface SocketAuthResult {
-  userId: string;
-  token: string;
-}
+
 
 const SECRET_KEY = 'Aloyebolu.123'; // In production, use: process.env.JWT_SECRET_KEY as string
 
@@ -29,7 +27,7 @@ export function decodeToken(token: string): DecodedToken | null {
 }
 
 export function getUserIdFromSocket(socket: Socket): any {
-  let rawToken = socket.handshake.auth?.token || '';
+  const rawToken = socket.handshake.auth?.token || '';
   console.log(rawToken)
   // Handle 'Bearer <token>' format
   const token = rawToken.startsWith('Bearer ') ? rawToken.split(' ')[1] : rawToken;

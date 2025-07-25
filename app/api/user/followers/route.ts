@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
       [userId, LIMIT, offset]
     );
  
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const followers = followersData.map((follower: any) => ({
       id: follower.id,
       name: follower.name,

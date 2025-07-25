@@ -2,6 +2,7 @@ import { EmailTemplateData } from './types';
 
 export const getEmailTemplate = (
   templateName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>
 ): EmailTemplateData => {
   const templates: Record<string, EmailTemplateData> = {

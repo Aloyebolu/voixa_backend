@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB, query } from "@/app/lib/db";
 import { getUserIdFromRequest, setCorsHeaders } from "@/app/lib/utils";
@@ -92,21 +93,23 @@ export async function POST(request: NextRequest) {
 
     // ✅ Badge fields
     if (includeTopBadges || includeNameStyle || includeBubbleStyle || includeEntranceStyle) {
-      const [badges, topBadges] = await Promise.all([
+      const [allBadges, topBadges] : [Record<string, any>, Record<string, any>] = await Promise.all([
         getBadgesForUser(userId),
         includeTopBadges ? getTopBadges(userId) : Promise.resolve({}),
       ]);
+
+      const userBadges = allBadges[userId] || [];
 
       if (includeTopBadges) {
         participant.top_badges = topBadges[userId] || [];
       }
 
       if (includeNameStyle) {
-        participant.name_style = getNameStyleFromBadges(badges);
+        participant.name_style = getNameStyleFromBadges(userBadges);
       }
 
       if (includeBubbleStyle) {
-        participant.bubble_style = getBubbleStyleFromBadges(badges);
+        participant.bubble_style = getBubbleStyleFromBadges(userBadges);
       }
 
       if (includeEntranceStyle) {

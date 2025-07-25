@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { connectDB, query } from "@/app/lib/db";
 import { getTopBadges, getUserBadges } from "@/app/lib/badges/badgeService";
 import { getNameStyleFromBadges } from "@/app/lib/badges/badgeDisplay";
