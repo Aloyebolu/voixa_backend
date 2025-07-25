@@ -361,9 +361,9 @@ function emitToUsers(userIds: string[], event: string, data: object) {
 //   };
 // }
 
-const PORT = process.env.PORT || 3000;
-// const url = __NEXT_HTTP_AGENT
-httpServer.listen(PORT, () => {
+// const PORT = process.env.PORT || 3000;
+// // const url = __NEXT_HTTP_AGENT
+// httpServer.listen(PORT, () => {
 
-  console.log(`🚀 Socket.io server is running on http://localhost:${PORT}`);
-});
+//   console.log(`🚀 Socket.io server is running on http://localhost:${PORT}`);
+// });
