@@ -361,7 +361,7 @@ function emitToUsers(userIds: string[], event: string, data: object) {
 //   };
 // }
 
-const PORT = 4000;
+const PORT = process.env.PORT || 3000;
 // const url = __NEXT_HTTP_AGENT
 httpServer.listen(PORT, () => {
 
