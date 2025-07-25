@@ -7,20 +7,28 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "start-server": "ts-node server.js"
+    "start-server": "ts-node server.ts",
+    "start-worker": "ts-node worker.ts",
+    "all": "ts-node worker.ts \n ts-node server.ts \n next dev --turbopack",
+    "dev:worker": "node --loader ts-node/esm /app/lib/worker.ts"
   },
   "dependencies": {
+    "@types/nodemailer": "^6.4.17",
+    "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "framer-motion": "^12.0.6",
     "jsonwebtoken": "^9.0.2",
     "next": "15.1.2",
+    "nodemailer": "^7.0.4",
     "pg": "^8.14.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "redis": "^5.5.6",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
-    "ws": "^8.18.1"
+    "ws": "^8.18.1",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -33,6 +41,7 @@
     "@types/ws": "^8.18.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.2",
+    "madge": "^8.0.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",

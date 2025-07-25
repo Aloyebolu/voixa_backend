@@ -1,8 +1,10 @@
 import { query, connectDB } from '@/app/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import { verifyPassword } from '@/app/lib/auth/password-util';
 
-const SECRET_KEY = 'your_secret_key'; // Replace with a secure key
+const SECRET_KEY = process.env.JWT_SECRET_KEY; // Replace with a secure key
 
 // Utility function to set CORS headers
 const createResponse = (messagesObject: object, status: number = 200) => {
@@ -38,16 +40,18 @@ export async function POST(request: NextRequest) {
         console.log('Successfully connected to the database ✅');
 
         // Use parameterized query to prevent SQL injection
-        const data = await query('SELECT * FROM USERS WHERE email = $1', [email]);
+        const data = await query('SELECT id, email, password, salt FROM USERS WHERE email = $1', [email]);
 
         if (data.length >= 1) {
             const user = data[0];
-            if (user.password === password) {
+            // Compare hashed password
+            const isValid = verifyPassword(password, user.password, user.salt);
+            if (isValid) {
                 console.log('Login successful for user:', user.id);
 
                 // Generate JWT
-                const token = jwt.sign({ userId: user.id, email: user.email }, SECRET_KEY, { expiresIn: '24h' });
-
+                const token = jwt.sign({ userId: user.id, email: user.email, role : 'user' }, SECRET_KEY, { expiresIn: '29993224h' });
+                console.log(user.id, token)
                 return createResponse({
                     message: 'Login success',
                     status: 'success',

@@ -1,24 +1,27 @@
-import pg from 'pg';
+import pg, { Client as ClientType } from 'pg';
 const { Client } = pg;
 
 // Ensure the client is globally available to avoid multiple connections
-let client: Client | null = null;
+let client: ClientType | null = null;
 
 export const connectDB = async () => {
     try {
         if (!client) {
             client = new Client({
               user: process.env.POSTGRES_USER || 'postgres',  
-              host: process.env.POSTGRES_HOST || 'localhost',      
-              database: process.env.POSTGRES_DB || 'practice',  
+              host: 'db.vfwvvednpjtigysckvhq.supabase.co',      
+              database: process.env.POSTGRES_DB || 'postgres',  
               password: process.env.POSTGRES_PASSWORD || 'Aloyebolu.123',  
               port: Number(process.env.POSTGRES_PORT) || 5432,
             });
             await client.connect();
             console.log('✅ Connected to PostgreSQL successfully!');
+        }else{
+            console.log(client)
         }
     } catch (error) {
         console.error('❌ Error connecting to PostgreSQL:', error);
+        disconnectDB()
     }
 };
 

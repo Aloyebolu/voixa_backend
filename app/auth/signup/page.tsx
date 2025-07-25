@@ -24,6 +24,7 @@ export default function SignUp(){
             method: "POST",
             body: image,
         })
+    
         console.log(await res2.json())
         console.log(formData)
 

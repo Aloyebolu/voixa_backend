@@ -55,3 +55,48 @@ const NewChat = () =>{
 }
 
 export default NewChat
+{(() => {
+    const replyName = messages?.[item.reply] 
+    ? participants?.[messages[item.reply].sender_id]?.name || null
+    : null;
+    return (
+      <View>
+        
+        <TouchableOpacity onLongPress={() => setSelectedMessage(item.id)}>
+          <MessageBubble
+            item={item}
+            reply={messages?.[item.reply]?.message || null}
+            replyName={replyName}
+
+          />
+
+        </TouchableOpacity>        
+        <Modal
+          transparent
+          visible={selectedMessage == item.id}
+          animationType="slide"
+          onRequestClose={() => setSelectedMessage(false)}
+        >
+          <TouchableOpacity
+            style={styles.overlay}
+            onPress={() => setSelectedMessage(false)}
+          >
+            <View style={styles.popup}>
+              <TouchableOpacity onPress={() => replyMessage(item.id)}>
+                <Text style={styles.option}>Reply</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => editMessage(item.id)}>
+                <Text style={styles.option}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => deleteMessage(item.id)}>
+                <Text style={styles.option}>Delete</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => copy(item.message)}>
+                <Text style={styles.option}>Copy</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      </View>
+    );
+  })()}

@@ -1,0 +1,8 @@
+{
+    "type" : "send_request",
+    "roomId": 50,
+    "extra" : {
+        "roomId" : "50",
+        "targetId" : "10000010"
+    }
+}

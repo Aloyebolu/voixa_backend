@@ -3,7 +3,7 @@ import { createContext, useState, useEffect } from "react";
 export const UserContext = createContext(null)
 const UserProvider = ({children}) =>{
     const [user, setUser] = useState()
-    const id = localStorage.getItem('userId')
+    const id = '10000010'
     useEffect(()=>{
         function fetchh(){
             fetch(`../api/user/${id}`)
