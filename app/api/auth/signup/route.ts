@@ -1,9 +1,7 @@
-import { query, connectDB, disconnectDB } from '@/app/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { generateSalt, hashPassword } from '@/app/lib/auth/password-util';
+import { supabase } from '@/app/lib/supabase'; // Your Supabase client with service_role key
+import { connectDB, query } from '@/app/lib/db';
 
-// Utility function to set CORS headers
 const createResponse = (messagesObject: object, status: number = 200) => {
   const response = NextResponse.json(messagesObject, { status });
   response.headers.set('Access-Control-Allow-Origin', '*');
@@ -12,7 +10,6 @@ const createResponse = (messagesObject: object, status: number = 200) => {
   return response;
 };
 
-// Handle OPTIONS requests (CORS preflight)
 export async function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
   response.headers.set('Access-Control-Allow-Origin', '*');
@@ -21,61 +18,44 @@ export async function OPTIONS() {
   return response;
 }
 
-
-// Handle POST requests
 export async function POST(request: NextRequest) {
   try {
-    const { email, name, password, age, gender, country } = await request.json();
-    
-    // Validate input
-    if (!email || !name || !password) {
-      console.log("Missing required")
-      console.log(email, name, password)
-      return createResponse({ message: 'Missing required fields' }, 400);
+    connectDB();
+    const {  name, age, gender, country } = await request.json();
+    const email = 'aloyebolu5@gmail.com'
+    if (!email || !name) {
+      console.log(email, name)
+      return createResponse({ message: 'Missing required fields: email or name' }, 400);
     }
 
-    // Check password strength
-    if (password.length < 8) {
-      console.log("Password less than 8")
-      return createResponse({ message: 'Password must be at least 8 characters' }, 400);
-    }
-
-    await connectDB();
-
-    // Check if user exists
-    const existingUser = await query('SELECT id FROM users WHERE email = $1', [email]);
-    if (existingUser.length > 0) {
-      return createResponse({ message: 'Email already in use' }, 409);
-    }
-
-    // Hash password
-    const salt = generateSalt();
-    const hashedPassword = hashPassword(password, salt);
-
-    // Insert user
-    const data = await query(
-      `INSERT INTO users(name, email, password, age, gender, country, salt) 
-       VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id`, 
-      [name, email, hashedPassword, age, gender, country, salt]
+    // Insert user info (consider UPSERT to avoid duplicates)
+    await query(
+      `INSERT INTO users (email, name, age, gender, country) 
+       VALUES ($1, $2, $3, $4, $5)`,
+      [email, name, age, gender, country]
     );
 
-    // Generate token with reasonable expiration
-    const token = jwt.sign(
-      { userId: data[0].id, email: email, role: 'user' }, 
-      process.env.JWT_SECRET_KEY!,
-      { expiresIn: '240000h' }
-    );
+    // Fetch user ID by email
+    const user = await query('SELECT supabase_id from users where email=$1', [email])
 
-    return createResponse({
-      message: 'Registration successful',
-      status: 'success',
-      token
+    if (!user) {
+      console.error('Error fetching user:');
+      return createResponse({ message: 'User not found' }, 404);
+    }
+
+    // Update Supabase auth user metadata
+    const { error: metadataError } = await supabase.auth.admin.updateUserById(user.supabase_id, {
+      user_metadata: { signup_complete: true },
     });
 
+    if (metadataError) {
+      console.error('Error updating user metadata:', metadataError);
+      return createResponse({ message: 'Failed to update user metadata' }, 500);
+    }
+
+    return createResponse({ message: 'Signup completed successfully', status: 'success' });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Signup completion error:', error);
     return createResponse({ message: 'Internal server error' }, 500);
-  } finally {
-    await disconnectDB();
   }
 }

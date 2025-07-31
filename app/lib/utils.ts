@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// import { NextRequest, NextResponse } from "next/server";
 export function setCorsHeaders(response: NextResponse) {
   response.headers.set("Access-Control-Allow-Origin", "*");
   response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -6,46 +7,86 @@ export function setCorsHeaders(response: NextResponse) {
   return response;
 }
 
-// export function verifyTokenWithSecret(token: string): { valid: boolean; decoded?: any; response?: NextResponse } {
-//   try {
-//     const decoded = jwt.verify(token, SECRET_KEY);
-//     return { valid: true, decoded };
-//   } catch (error) {
-//     return {
-//       valid: false,
-//       response: setCorsHeaders(NextResponse.json({ message: "Invalid token" }, { status: 401 })),
-//     };
-//   }
-// }
+// // export function verifyTokenWithSecret(token: string): { valid: boolean; decoded?: any; response?: NextResponse } {
+// //   try {
+// //     const decoded = jwt.verify(token, SECRET_KEY);
+// //     return { valid: true, decoded };
+// //   } catch (error) {
+// //     return {
+// //       valid: false,
+// //       response: setCorsHeaders(NextResponse.json({ message: "Invalid token" }, { status: 401 })),
+// //     };
+// //   }
+// // }
 
-import { decodeToken } from '../utils/auth';
+// // import { decodeToken } from '../utils/auth';
 
-export function getUserIdFromRequest(request: NextRequest): { role?: string | null; userId: string | null; response?: NextResponse } {
-  const authHeader = request.headers.get("Authorization");
-  const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+// // export function getUserIdFromRequest(request: NextRequest): { role?: string | null; userId: string | null; response?: NextResponse } {
+// //   const authHeader = request.headers.get("Authorization");
+// //   const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+
+// //   if (!token) {
+// //     return {
+// //       userId: null,
+// //       response: setCorsHeaders(NextResponse.json({ error: "Unauthorized: Token missing" }, { status: 401 })),
+// //     };
+// //   }
+
+// //   const decoded = decodeToken(token);
+// //   if (!decoded) {
+// //     return {
+// //       userId: null,
+// //       response: setCorsHeaders(NextResponse.json({ error: "Unauthorized: Invalid token" }, { status: 401 })),
+// //     };
+// //   }
+
+// //   const overrideUserId = request.headers.get("x-user-override");
+// //   // const serverOverride = request.headers.get("x-server-override");
+// //   const effectiveUserId = overrideUserId ? (decoded.role === "admin" ? overrideUserId : 'server') : decoded.userId;
+
+// //   if (overrideUserId && decoded.role === "admin") {
+// //     console.log(`🔐 Admin override: ${decoded.userId} acting as ${overrideUserId}`);
+// //   }
+
+// //   return { userId: effectiveUserId, role: decoded.role};
+// // }
+
+
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/app/lib/supabase'; // Your initialized Supabase client
+
+export async function getUserIdFromRequest(request: NextRequest): Promise<{ userId: string | null; role?: string | null; response?: NextResponse }> {
+  const authHeader = request.headers.get('Authorization');
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
 
   if (!token) {
     return {
       userId: null,
-      response: setCorsHeaders(NextResponse.json({ error: "Unauthorized: Token missing" }, { status: 401 })),
+      response: NextResponse.json({ error: 'Unauthorized: Token missing' }, { status: 401 }),
     };
   }
 
-  const decoded = decodeToken(token);
-  if (!decoded) {
+  try {
+    const { data, error } = await supabase.auth.getUser(token);
+
+    if (error || !data.user) {
+      return {
+        userId: null,
+        response: NextResponse.json({ error: 'Unauthorized: Invalid token' }, { status: 401 }),
+      };
+    }
+
+    // user.id is the Supabase user UUID
+    const user = data.user;
+    return {
+      userId: user.id,
+      role: (user.user_metadata as any)?.role || null, // or customize based on your metadata
+    };
+  } catch (e) {
+    console.error('Error verifying token:', e);
     return {
       userId: null,
-      response: setCorsHeaders(NextResponse.json({ error: "Unauthorized: Invalid token" }, { status: 401 })),
+      response: NextResponse.json({ error: 'Unauthorized: Token verification failed' }, { status: 401 }),
     };
   }
-
-  const overrideUserId = request.headers.get("x-user-override");
-  // const serverOverride = request.headers.get("x-server-override");
-  const effectiveUserId = overrideUserId ? (decoded.role === "admin" ? overrideUserId : 'server') : decoded.userId;
-
-  if (overrideUserId && decoded.role === "admin") {
-    console.log(`🔐 Admin override: ${decoded.userId} acting as ${overrideUserId}`);
-  }
-
-  return { userId: effectiveUserId, role: decoded.role};
 }

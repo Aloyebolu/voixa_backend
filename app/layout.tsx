@@ -7,12 +7,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  // const user = localStorage.getItem('userId')
-  // const {user, setUser} = useContext(UserContext)
-  
   return (
-    <html lang="en" content="width=device-width, maximum-scale=1.0, users-scalable=no, initial-scale=1.0">
+    <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="icon" href="/logo.png" />
+        <title>Voixa App</title> {/* Optional: add a title */}
+      </head>
       <body className="select-none">
         <UserProvider>
           {children}
